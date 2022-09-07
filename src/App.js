@@ -1,39 +1,36 @@
 import 'antd/dist/antd.css';
 import './App.css';
-import { Button, Input, Modal, Select, Table } from 'antd'
+import { Button } from 'antd'
 import CompliantsTable from './Components/CompliantsTable';
-const { Option } = Select
+import { useState } from 'react';
+import AddComplaintModal from './Components/AddComplaintModal';
 
 
 function App() {
+  const [modalOpen, setOpen] = useState(false);
+
   return (
-    <div className="flex justify-center items-center h-screen ">
-      <div className="bg-slate-100 rounded-md p-6">
+    <div className="flex justify-center  h-screen bg-slate-50 ">
+      <div className="bg-slate-100 rounded-md p-6 min-w-[538px]">
 
         <div className='flex justify-between mb-5'>
           <h3 className='font-bold'>Compliants</h3>
-          <Button>Add compliant</Button>
+          <Button
+            onClick={() => setOpen(true)}
+          >
+            Add compliant
+          </Button>
         </div>
 
         <CompliantsTable />
 
-        <Modal
-          title="Enter a compliant"
-          visible={true}
-        >
-          <Input
-            className='mb-4 block'
-            placeholder='Compliant'
-          />
-          <Select defaultValue="">
-            <Option value="">Select an option</Option>
-            <Option value="web">Web</Option>
-            <Option value="mobile">Mobile</Option>
-          </Select>
-        </Modal>
+        <AddComplaintModal
+          modalOpen={modalOpen}
+          setOpen={setOpen}
+        />
 
       </div>
-    </div>
+    </div >
   );
 }
 

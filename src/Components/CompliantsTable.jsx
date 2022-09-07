@@ -1,26 +1,38 @@
-import { Table } from "antd";
+import { Spin, Table, Tag } from "antd";
+import { useComplaints } from "../hooks/useComplaints";
 
 function CompliantsTable() {
+  const { data, loading, error } = useComplaints()
+
+  let dataSource = []
+
   const columns = [
     {
-      title: 'Compliant ID',
-      dataIndex: 'compliantId',
-      key: 'compliantId',
+      title: 'Complaint ID',
+      dataIndex: 'complaintId',
+      key: 'complaintId',
     },
     {
-      title: 'Compliant',
-      dataIndex: 'compliant',
-      key: 'compliant',
+      title: 'Complaint',
+      dataIndex: 'complaint',
+      key: 'complaint',
     },
     {
-      title: 'Compliant Name',
-      dataIndex: 'compliantName',
-      key: 'compliantName',
+      title: 'Company Name',
+      dataIndex: 'companyName',
+      key: 'companyName',
     },
     {
       title: 'Source',
       dataIndex: 'source',
       key: 'source',
+      render: (_, { source }) => {
+        let color = source === 'web' ? 'geekblue' : 'green'
+
+        return (<>
+          <Tag color={color}>{source}</Tag>
+        </>)
+      },
     },
     {
       title: 'Type',
@@ -29,23 +41,27 @@ function CompliantsTable() {
     },
   ];
 
-  const dataSource = [
-    {
-      key: 1,
-      compliantId: 1,
-      compliant: 'Eric',
-      compliantName: 'Eric',
-      source: 'Eric',
-      type: 'web'
-    }
-  ]
+
+  if (data) {
+    data.complaint.map(c => {
+      dataSource.push({
+        ...c,
+        key: c.id,
+        companyName: c.company.name.toUpperCase(),
+        complaintId: !c.complaintId ? 'No Value' : c.complaintId
+      })
+    })
+  }
 
   return (
+    <div className='min-h-[200px]'>
+      {loading && <div className="flex justify-center pb-4"><Spin /></div>}
 
-    <Table
-      columns={columns}
-      dataSource={dataSource}
-    />
+      {data && <Table
+        columns={columns}
+        dataSource={dataSource}
+      />}
+    </div>
   )
 
 }
